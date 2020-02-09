@@ -58,10 +58,25 @@ app.get('/api/persons/:id', (req, resp) => {
 app.post('/api/persons', (req, resp) => {
     console.log(req.headers)
     const person = req.body
+    if (!person) {
+        return response.status(400).json({
+            error: 'all data missing'
+        })
+    }
 
     if (!person.name) {
         return response.status(400).json({
             error: 'name missing'
+        })
+    } else if (!person.number) {
+        return response.status(400).json({
+            error: 'number missing'
+        })
+    }
+
+    if (persons.includes(person.name)) {
+        return response.status(400).json({
+            error: 'name already in phonebook'
         })
     }
 
