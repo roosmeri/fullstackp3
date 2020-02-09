@@ -4,6 +4,7 @@ var morgan = require('morgan')
 const cors = require('cors')
 
 app.use(cors())
+app.use(express.static('build'))
 
 morgan.token('body', function (req, res) { return JSON.stringify(req.body) });
 app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'));
@@ -40,7 +41,8 @@ let persons = [
 ]
 
 
-app.get('/', (req, resp) => {
+app.get('/api/persons', (req, resp) => {
+    console.log('asked for all persons')
     resp.writeHead(200, { 'Content-Type': 'application/json' })
     resp.end(JSON.stringify(persons))
 })
