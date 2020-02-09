@@ -7,8 +7,8 @@ const Person = require('./models/person')
 app.use(cors())
 app.use(express.static('build'))
 
-morgan.token('body', function (req, res) { return JSON.stringify(req.body) });
-app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'));
+morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
+app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'))
 //app.use(morgan('tiny'))
 
 app.use(express.json())
@@ -20,7 +20,7 @@ app.get('/api/persons', (req, resp, next) => {
             results = results.concat(p.toJSON())
         })
         resp.json(results)
-    })
+    }).catch(error => next(error))
 
 })
 
@@ -38,7 +38,7 @@ app.get('/api/persons/:id', (req, resp, next) => {
         if (person) {
             resp.json(person.toJSON())
         } else {
-            response.status(404).end()
+            resp.status(404).end()
         }
     })
         .catch(error => next(error))
@@ -71,13 +71,13 @@ app.post('/api/persons', (req, resp, next) => {
     person.save().then(savedPerson => {
         resp.json(savedPerson.toJSON())
     })
-    .catch(error => next(error))
+        .catch(error => next(error))
 })
 
 
 app.delete('/api/persons/:id', (req, resp, next) => {
     Person.findByIdAndRemove(req.params.id)
-        .then(result => {
+        .then(() => {
             resp.status(204).end()
         })
         .catch(error => next(error))
@@ -87,7 +87,7 @@ app.delete('/api/persons/:id', (req, resp, next) => {
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
 
-    if (error.name === 'CastError' && error.kind == 'ObjectId') {
+    if (error.name === 'CastError' && error.kind === 'ObjectId') {
         return response.status(400).send({ error: 'malformatted id' })
     } else if (error.name === 'ValidationError') {
         return response.status(400).json({ error: error.message })

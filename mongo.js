@@ -16,7 +16,7 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model('Person', personSchema)
 
 
-if (process.argv.length == 3) {
+if (process.argv.length === 3) {
     Person.find({}).then(res => {
         res.forEach(p => {
             console.log(p)
@@ -25,7 +25,7 @@ if (process.argv.length == 3) {
     })
 }
 
-if (process.argv.length == 5) {
+if (process.argv.length === 5) {
     const name = process.argv[3]
     const number = process.argv[4]
 
@@ -36,8 +36,8 @@ if (process.argv.length == 5) {
     })
 
     person.save().then(response => {
-        console.log('person saved!');
-        mongoose.connection.close();
+        console.log('person saved!')
+        mongoose.connection.close()
     })
 }
 
