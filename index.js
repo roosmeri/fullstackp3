@@ -1,5 +1,7 @@
 const express = require('express')
 const app = express()
+var morgan = require('morgan')
+app.use(morgan('tiny'))
 
 app.use(express.json())
 
@@ -56,7 +58,7 @@ app.get('/api/persons/:id', (req, resp) => {
 })
 
 app.post('/api/persons', (req, resp) => {
-    console.log(req.headers)
+  //  console.log(req.headers)
     const person = req.body
     if (!person) {
         return response.status(400).json({
