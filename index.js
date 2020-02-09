@@ -62,21 +62,6 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (req, resp, next) => {
     const body = req.body
-    if (!body) {
-        return resp.status(400).json({
-            error: 'all data missing'
-        })
-    }
-
-    if (!body.name) {
-        return resp.status(400).json({
-            error: 'name missing'
-        })
-    } else if (!body.number) {
-        return resp.status(400).json({
-            error: 'number missing'
-        })
-    }
 
     const person = new Person({
         name: body.name,
@@ -85,11 +70,8 @@ app.post('/api/persons', (req, resp, next) => {
 
     person.save().then(savedPerson => {
         resp.json(savedPerson.toJSON())
-    }).catch(error => {
-        return resp.status(400).json({
-            error: 'could not add person, already exists'
-        })
     })
+    .catch(error => next(error))
 })
 
 
@@ -107,6 +89,8 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'CastError' && error.kind == 'ObjectId') {
         return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
     }
 
     next(error)
