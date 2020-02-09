@@ -26,9 +26,11 @@ app.get('/api/persons', (req, resp, next) => {
 
 
 app.get('/info', (req, resp) => {
-    const amnt = persons.length
-    const time = new Date()
-    resp.send(`<div>Phonebook has info for ${amnt} people</div><div>${time.toUTCString()}</div`)
+    Person.find({}).then(res => {
+        const time = new Date()
+        resp.send(`<div>Phonebook has info for ${res.length} people</div><div>${time.toUTCString()}</div`)
+    })
+
 })
 
 app.get('/api/persons/:id', (req, resp, next) => {
@@ -39,10 +41,7 @@ app.get('/api/persons/:id', (req, resp, next) => {
             response.status(404).end()
         }
     })
-        .catch(error => {
-            console.log(error);
-            response.status(400).send({ error: 'malformatted id' })
-        })
+        .catch(error => next(error))
 
 })
 
