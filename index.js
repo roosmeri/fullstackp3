@@ -63,17 +63,17 @@ app.put('/api/persons/:id', (request, response, next) => {
 app.post('/api/persons', (req, resp, next) => {
     const body = req.body
     if (!body) {
-        return response.status(400).json({
+        return resp.status(400).json({
             error: 'all data missing'
         })
     }
 
     if (!body.name) {
-        return response.status(400).json({
+        return resp.status(400).json({
             error: 'name missing'
         })
     } else if (!body.number) {
-        return response.status(400).json({
+        return resp.status(400).json({
             error: 'number missing'
         })
     }
@@ -85,6 +85,10 @@ app.post('/api/persons', (req, resp, next) => {
 
     person.save().then(savedPerson => {
         resp.json(savedPerson.toJSON())
+    }).catch(error => {
+        return resp.status(400).json({
+            error: 'could not add person, already exists'
+        })
     })
 })
 
